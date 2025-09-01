@@ -180,7 +180,35 @@ function extractOrderTime(text: string): string {
     if (match) {
       const timeStr = match[1]
       try {
-        // 한국 시간대로 파싱하여 표준 형식으로 변환
+        // 25/09/01 20:04:44 형식 처리
+        if (timeStr.includes("/")) {
+          const parts = timeStr.split(" ")
+          if (parts.length === 2) {
+            const datePart = parts[0].split("/")
+            const timePart = parts[1].split(":")
+
+            if (datePart.length === 3 && timePart.length === 3) {
+              const year = parseInt(datePart[0])
+              const month = parseInt(datePart[1])
+              const day = parseInt(datePart[2])
+              const hours = parseInt(timePart[0])
+              const minutes = parseInt(timePart[1])
+              const seconds = parseInt(timePart[2])
+
+              // 2자리 연도는 2000년대로 가정 (25 -> 2025)
+              const fullYear = year < 100 ? 2000 + year : year
+
+              // YYYY.MM.DD HH:mm:ss 형식으로 반환
+              return `${fullYear}.${String(month).padStart(2, "0")}.${String(
+                day
+              ).padStart(2, "0")} ${String(hours).padStart(2, "0")}:${String(
+                minutes
+              ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+            }
+          }
+        }
+
+        // 기존 방식으로 파싱 시도
         const date = new Date(timeStr)
         if (!isNaN(date.getTime())) {
           // YYYY.MM.DD HH:mm:ss 형식으로 반환
@@ -210,6 +238,23 @@ function extractOrderTime(text: string): string {
   const seconds = String(now.getSeconds()).padStart(2, "0")
 
   return `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`
+}
+
+// 테스트용: 날짜 파싱 함수 테스트
+export function testDateParsing() {
+  const testCases = [
+    "25/09/01 20:04:44",
+    "24/12/25 15:30:00",
+    "2024-12-25 15:30:00",
+    "주문접수시간: 25/09/01 20:04:44",
+    "주문시간 24/12/25 15:30:00",
+  ]
+
+  console.log("=== 날짜 파싱 테스트 ===")
+  testCases.forEach((testCase) => {
+    const result = extractOrderTime(testCase)
+    console.log(`입력: "${testCase}" -> 결과: "${result}"`)
+  })
 }
 
 // 메인 OCR 처리 함수
@@ -385,16 +430,7 @@ function createDummyReceipt(imageFile: File): Receipt {
     cardNumber: "0190-79**-****-7110",
     gsAllPointsBasic: 13,
     gsAllPointsAccumulated: 97,
-    orderReceiptTime: (() => {
-      const now = new Date()
-      const year = now.getFullYear()
-      const month = String(now.getMonth() + 1).padStart(2, "0")
-      const day = String(now.getDate()).padStart(2, "0")
-      const hours = String(now.getHours()).padStart(2, "0")
-      const minutes = String(now.getMinutes()).padStart(2, "0")
-      const seconds = String(now.getSeconds()).padStart(2, "0")
-      return `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`
-    })(),
+    orderReceiptTime: "2025.09.01 20:04:44",
     imageUrl: URL.createObjectURL(imageFile),
     created_at: new Date(),
     updated_at: new Date(),

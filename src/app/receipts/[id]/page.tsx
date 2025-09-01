@@ -233,7 +233,7 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium text-lg'>
+                <p className='font-semibold text-lg text-gray-900'>
                   {currentReceipt.storeName}
                 </p>
               )}
@@ -248,7 +248,9 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>{currentReceipt.transactionId}</p>
+                <p className='font-semibold text-gray-900'>
+                  {currentReceipt.transactionId}
+                </p>
               )}
             </div>
             <div>
@@ -261,7 +263,9 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>{currentReceipt.orderNumber}</p>
+                <p className='font-semibold text-gray-900'>
+                  {currentReceipt.orderNumber}
+                </p>
               )}
             </div>
             <div>
@@ -274,7 +278,9 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>{currentReceipt.orderType}</p>
+                <p className='font-semibold text-gray-900'>
+                  {currentReceipt.orderType}
+                </p>
               )}
             </div>
             <div>
@@ -289,12 +295,14 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>{currentReceipt.orderReceiptTime}</p>
+                <p className='font-semibold text-gray-900'>
+                  {currentReceipt.orderReceiptTime}
+                </p>
               )}
             </div>
             <div>
               <p className='text-sm text-gray-500'>등록일</p>
-              <p className='font-medium'>
+              <p className='font-semibold text-gray-900'>
                 {format(
                   new Date(currentReceipt.created_at || ""),
                   "yyyy년 MM월 dd일 HH:mm",
@@ -323,7 +331,7 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>
+                <p className='font-semibold text-gray-900'>
                   {currentReceipt.customerServicePhone}
                 </p>
               )}
@@ -340,7 +348,7 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>
+                <p className='font-semibold text-gray-900'>
                   {currentReceipt.riderCustomerService}
                 </p>
               )}
@@ -357,7 +365,7 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>
+                <p className='font-semibold text-gray-900'>
                   {currentReceipt.customerSafetyNumber}
                 </p>
               )}
@@ -374,7 +382,9 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>{currentReceipt.customerAddress}</p>
+                <p className='font-semibold text-gray-900'>
+                  {currentReceipt.customerAddress}
+                </p>
               )}
             </div>
           </div>
@@ -412,7 +422,7 @@ export default function ReceiptDetailPage() {
                         className='w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent'
                       />
                     ) : (
-                      <p className='font-medium text-gray-800'>{item.name}</p>
+                      <p className='font-semibold text-gray-900'>{item.name}</p>
                     )}
                   </div>
                   <div>
@@ -432,7 +442,9 @@ export default function ReceiptDetailPage() {
                         min='1'
                       />
                     ) : (
-                      <p className='text-sm text-gray-500'>{item.quantity}개</p>
+                      <p className='font-semibold text-gray-900'>
+                        {item.quantity}개
+                      </p>
                     )}
                   </div>
                   <div>
@@ -452,7 +464,7 @@ export default function ReceiptDetailPage() {
                         min='0'
                       />
                     ) : (
-                      <p className='font-medium text-blue-600'>
+                      <p className='font-semibold text-blue-600'>
                         ₩{formatCurrency(item.price)}
                       </p>
                     )}
@@ -469,7 +481,7 @@ export default function ReceiptDetailPage() {
                         className='w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent'
                       />
                     ) : (
-                      <p className='text-sm text-gray-500'>
+                      <p className='font-semibold text-gray-900'>
                         {item.productCode || "-"}
                       </p>
                     )}
@@ -497,7 +509,7 @@ export default function ReceiptDetailPage() {
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
             <div>
               <p className='text-sm text-gray-500'>합계 수량</p>
-              <p className='font-medium text-lg'>
+              <p className='font-semibold text-lg text-gray-900'>
                 {currentReceipt.totalQuantity}개
               </p>
             </div>
@@ -514,7 +526,7 @@ export default function ReceiptDetailPage() {
                   min='0'
                 />
               ) : (
-                <p className='font-medium text-lg text-blue-600'>
+                <p className='font-semibold text-lg text-blue-600'>
                   ₩{formatCurrency(currentReceipt.totalAmount)}
                 </p>
               )}
@@ -532,7 +544,7 @@ export default function ReceiptDetailPage() {
                   min='0'
                 />
               ) : (
-                <p className='font-medium'>
+                <p className='font-semibold text-gray-900'>
                   ₩{formatCurrency(currentReceipt.taxableSales)}
                 </p>
               )}
@@ -550,7 +562,7 @@ export default function ReceiptDetailPage() {
                   min='0'
                 />
               ) : (
-                <p className='font-medium'>
+                <p className='font-semibold text-gray-900'>
                   ₩{formatCurrency(currentReceipt.vat)}
                 </p>
               )}
@@ -576,7 +588,7 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>
+                <p className='font-semibold text-gray-900'>
                   {currentReceipt.customerRequest || "-"}
                 </p>
               )}
@@ -591,7 +603,7 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>
+                <p className='font-semibold text-gray-900'>
                   {currentReceipt.riderRequest || "-"}
                 </p>
               )}
@@ -606,7 +618,7 @@ export default function ReceiptDetailPage() {
                   className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                 />
               ) : (
-                <p className='font-medium'>
+                <p className='font-semibold text-gray-900'>
                   {currentReceipt.cardNumber || "-"}
                 </p>
               )}
@@ -627,7 +639,7 @@ export default function ReceiptDetailPage() {
                   min='0'
                 />
               ) : (
-                <p className='font-medium'>
+                <p className='font-semibold text-gray-900'>
                   {currentReceipt.gsAllPointsBasic || 0}점
                 </p>
               )}
@@ -648,7 +660,7 @@ export default function ReceiptDetailPage() {
                   min='0'
                 />
               ) : (
-                <p className='font-medium'>
+                <p className='font-semibold text-gray-900'>
                   {currentReceipt.gsAllPointsAccumulated || 0}점
                 </p>
               )}
