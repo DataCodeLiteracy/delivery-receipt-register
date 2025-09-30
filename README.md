@@ -1,21 +1,21 @@
 # 배달 영수증 기록장 🧾
 
-모바일에서 웹으로 열어서 사용할 수 있는 배달 영수증 관리 서비스입니다. 핸드폰으로 찍은 영수증 이미지를 OCR 처리하여 자동으로 데이터를 추출하고, 지출 패턴을 분석할 수 있습니다.
+모바일에서 웹으로 열어서 사용할 수 있는 배달 영수증 관리 서비스입니다. 핸드폰으로 찍은 영수증 이미지를 AI 분석하여 자동으로 데이터를 추출하고, 지출 패턴을 분석할 수 있습니다.
 
 ## ✨ 주요 기능
 
-- **📸 영수증 이미지 업로드**: 갤러리에서 선택하거나 카메라로 촬영
-- **🔍 OCR 자동 처리**: Google Vision API를 활용한 텍스트 추출
+- **📸 영수증 이미지 업로드**: 갤러리에서 이미지 파일 선택
+- **🤖 AI 이미지 분석**: OpenAI API를 활용한 지능형 영수증 분석
 - **📊 지출 분석**: 월별, 카테고리별 지출 통계 및 차트
 - **🔍 검색 및 필터링**: 상점명, 상품명, 날짜로 검색
 - **📱 모바일 최적화**: 반응형 디자인으로 모바일에서 편리하게 사용
 
 ## 🏗️ 기술 스택
 
-- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
+- **Frontend**: Next.js 15, TypeScript, Tailwind CSS
 - **Database**: Firebase Firestore
 - **Storage**: Firebase Storage
-- **OCR**: Google Cloud Vision API
+- **AI**: OpenAI API (GPT-4o)
 - **Charts**: Recharts
 - **Icons**: Lucide React
 
@@ -34,6 +34,10 @@ yarn install
 `.env.local` 파일을 생성하고 다음 내용을 추가하세요:
 
 ```env
+# OpenAI API 설정
+NEXT_PUBLIC_OPENAI_API_KEY=your_openai_api_key_here
+NEXT_PUBLIC_AI_MODEL=gpt-4o-mini
+
 # Firebase 설정
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
@@ -41,9 +45,6 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-
-# Google Cloud Vision API
-GOOGLE_CLOUD_VISION_API_KEY=your_google_vision_api_key
 ```
 
 ### 3. Firebase 프로젝트 설정
@@ -52,11 +53,11 @@ GOOGLE_CLOUD_VISION_API_KEY=your_google_vision_api_key
 2. Firestore Database와 Storage 활성화
 3. 웹 앱 추가 및 설정 정보 복사
 
-### 4. Google Cloud Vision API 설정
+### 4. OpenAI API 설정
 
-1. [Google Cloud Console](https://console.cloud.google.com/)에서 프로젝트 생성
-2. Vision API 활성화
-3. API 키 생성
+1. [OpenAI Platform](https://platform.openai.com/)에서 계정 생성
+2. API 키 생성 (Billing 설정 필요)
+3. 사용할 모델 선택 (gpt-4o-mini 권장 - 비용 효율적)
 
 ### 5. 개발 서버 실행
 
@@ -70,9 +71,9 @@ yarn dev
 
 ### 1. 영수증 등록
 
-- 메인 페이지에서 "갤러리에서 선택" 또는 "카메라로 촬영" 버튼 클릭
-- 영수증 이미지 선택 후 "OCR 처리하기" 버튼 클릭
-- 자동으로 추출된 데이터 확인 및 저장
+- 메인 페이지에서 "이미지 파일 선택" 버튼 클릭
+- 영수증 이미지 선택 후 "이미지 분석하기" 버튼 클릭
+- AI가 자동으로 추출한 데이터 확인 및 저장
 
 ### 2. 영수증 목록 확인
 
@@ -99,7 +100,7 @@ src/
 ├── lib/                   # 유틸리티 함수
 │   ├── firebase.ts       # Firebase 설정
 │   ├── database.ts       # 데이터베이스 작업
-│   └── ocr.ts           # OCR 처리
+│   └── ocr.ts           # AI 이미지 분석
 └── types/                 # TypeScript 타입 정의
     └── receipt.ts        # 영수증 관련 타입
 ```

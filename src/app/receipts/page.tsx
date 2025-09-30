@@ -25,6 +25,7 @@ export default function ReceiptsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStore, setFilterStore] = useState("")
   const [filterOrderType, setFilterOrderType] = useState("")
+  const [barcodeFilter, setBarcodeFilter] = useState("")
   const [sortBy, setSortBy] = useState<"date" | "amount" | "store">("date")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
   const [currentPage, setCurrentPage] = useState(1)
@@ -41,7 +42,15 @@ export default function ReceiptsPage() {
   useEffect(() => {
     filterAndSortReceipts()
     setCurrentPage(1) // 필터 변경 시 첫 페이지로 이동
-  }, [receipts, searchTerm, filterStore, filterOrderType, sortBy, sortOrder])
+  }, [
+    receipts,
+    searchTerm,
+    filterStore,
+    filterOrderType,
+    barcodeFilter,
+    sortBy,
+    sortOrder,
+  ])
 
   const loadReceipts = async () => {
     try {
@@ -81,6 +90,16 @@ export default function ReceiptsPage() {
       )
     }
 
+    // 바코드 필터링 (4자리 이상 입력 시)
+    if (barcodeFilter.trim() && barcodeFilter.trim().length >= 4) {
+      const barcodeQuery = barcodeFilter.trim()
+      filtered = filtered.filter((receipt) =>
+        receipt.items.some(
+          (item) => item.productCode && item.productCode.includes(barcodeQuery)
+        )
+      )
+    }
+
     // 정렬
     filtered.sort((a, b) => {
       let aValue: Date | number | string
@@ -92,8 +111,8 @@ export default function ReceiptsPage() {
           bValue = new Date(b.created_at || 0)
           break
         case "amount":
-          aValue = a.totalAmount
-          bValue = b.totalAmount
+          aValue = a.finalAmount || a.totalAmount
+          bValue = b.finalAmount || b.totalAmount
           break
         case "store":
           aValue = a.storeName
@@ -111,7 +130,15 @@ export default function ReceiptsPage() {
     })
 
     setFilteredReceipts(filtered)
-  }, [receipts, searchTerm, filterStore, filterOrderType, sortBy, sortOrder])
+  }, [
+    receipts,
+    searchTerm,
+    filterStore,
+    filterOrderType,
+    barcodeFilter,
+    sortBy,
+    sortOrder,
+  ])
 
   const handleDelete = async (id: string) => {
     try {
@@ -227,7 +254,7 @@ export default function ReceiptsPage() {
         format(orderDate, "HH:mm", { locale: ko }),
         receipt.customerAddress || "-",
         receipt.orderType,
-        receipt.totalAmount,
+        receipt.finalAmount || receipt.totalAmount,
         itemsText,
         receipt.totalQuantity,
         format(createdDate, "yyyy-MM-dd HH:mm", { locale: ko }),
@@ -306,7 +333,7 @@ export default function ReceiptsPage() {
         <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6'>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
             {/* 검색 */}
-            <div className='sm:col-span-2 lg:col-span-2'>
+            <div className='sm:col-span-2 lg:col-span-1'>
               <label className='block text-sm font-medium text-gray-700 mb-2'>
                 검색
               </label>
@@ -314,12 +341,35 @@ export default function ReceiptsPage() {
                 <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5' />
                 <input
                   type='text'
-                  placeholder='상점명, 주문번호, 상품명으로 검색...'
+                  placeholder='상점명, 주문번호, 상품명...'
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className='w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-medium text-black placeholder-gray-500'
                 />
               </div>
+            </div>
+
+            {/* 바코드 검색 */}
+            <div className='sm:col-span-2 lg:col-span-1'>
+              <label className='block text-sm font-medium text-gray-700 mb-2'>
+                바코드 검색
+              </label>
+              <input
+                type='text'
+                placeholder='바코드 4자리 이상 입력...'
+                value={barcodeFilter}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, "")
+                  setBarcodeFilter(value)
+                }}
+                className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-medium text-black placeholder-gray-500'
+                maxLength={13}
+              />
+              {barcodeFilter && barcodeFilter.length < 4 && (
+                <p className='text-xs text-orange-600 mt-1'>
+                  최소 4자리 이상 입력하세요
+                </p>
+              )}
             </div>
 
             {/* 상점명 필터 */}
@@ -390,12 +440,20 @@ export default function ReceiptsPage() {
           </div>
 
           {/* Active Filters */}
-          {(searchTerm || filterStore || filterOrderType) && (
-            <div className='flex items-center space-x-2'>
+          {(searchTerm ||
+            filterStore ||
+            filterOrderType ||
+            (barcodeFilter && barcodeFilter.length >= 4)) && (
+            <div className='flex items-center flex-wrap gap-2 mt-4'>
               <span className='text-sm text-gray-500'>활성 필터:</span>
               {searchTerm && (
                 <span className='px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full'>
                   검색: {searchTerm}
+                </span>
+              )}
+              {barcodeFilter && barcodeFilter.length >= 4 && (
+                <span className='px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full'>
+                  바코드: {barcodeFilter}
                 </span>
               )}
               {filterStore && (
@@ -413,6 +471,7 @@ export default function ReceiptsPage() {
                   setSearchTerm("")
                   setFilterStore("")
                   setFilterOrderType("")
+                  setBarcodeFilter("")
                 }}
                 className='text-sm text-red-600 hover:text-red-800'
               >
@@ -594,7 +653,10 @@ export default function ReceiptsPage() {
                             </div>
                           </td>
                           <td className='border border-gray-300 px-4 py-3 text-sm text-gray-900 font-medium'>
-                            ₩{formatCurrency(receipt.totalAmount)}
+                            ₩
+                            {formatCurrency(
+                              receipt.finalAmount || receipt.totalAmount
+                            )}
                           </td>
                           <td className='border border-gray-300 px-4 py-3 text-sm text-gray-900'>
                             <div

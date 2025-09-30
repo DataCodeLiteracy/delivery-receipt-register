@@ -6,6 +6,11 @@ export interface ReceiptItem {
   price: number
 }
 
+export interface Discount {
+  name: string // 할인명 (LG U+할인, APP전용할인 등)
+  amount: number // 할인 금액
+}
+
 export interface Receipt {
   id: string
   storeName: string
@@ -18,9 +23,12 @@ export interface Receipt {
   customerAddress: string
   items: ReceiptItem[]
   totalQuantity: number
-  totalAmount: number
-  taxableSales: number
-  vat: number
+  totalAmount: number // 할인 전 합계
+  discounts?: Discount[] // 할인 항목들
+  totalDiscount?: number // 총 할인 금액
+  finalAmount?: number // 최종 결제 금액 (할인 후)
+  taxableSales: number // 과세 매출
+  vat: number // 부가세
   customerRequest?: string
   riderRequest?: string
   cardNumber?: string

@@ -210,7 +210,7 @@ export default function ReceiptDetailPage() {
           </h2>
           <div className='text-center'>
             <img
-              src={currentReceipt.imageUrl}
+              src={`data:image/jpeg;base64,${currentReceipt.imageUrl}`}
               alt='Receipt'
               className='max-w-full h-96 object-contain mx-auto rounded-lg border'
             />
@@ -514,7 +514,7 @@ export default function ReceiptDetailPage() {
               </p>
             </div>
             <div>
-              <p className='text-sm text-gray-500'>총 금액</p>
+              <p className='text-sm text-gray-500'>합계 금액 (할인 전)</p>
               {isEditing ? (
                 <input
                   type='number'
@@ -522,14 +522,52 @@ export default function ReceiptDetailPage() {
                   onChange={(e) =>
                     updateField("totalAmount", parseInt(e.target.value) || 0)
                   }
-                  className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg font-medium text-blue-600'
+                  className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                   min='0'
                 />
               ) : (
-                <p className='font-semibold text-lg text-blue-600'>
+                <p className='font-semibold text-gray-900'>
                   ₩{formatCurrency(currentReceipt.totalAmount)}
                 </p>
               )}
+            </div>
+            {currentReceipt.discounts &&
+              currentReceipt.discounts.length > 0 && (
+                <div className='col-span-2'>
+                  <p className='text-sm text-gray-500 mb-2'>할인 내역</p>
+                  <div className='space-y-2 bg-red-50 p-3 rounded-lg border border-red-200'>
+                    {currentReceipt.discounts.map((discount, idx) => (
+                      <div
+                        key={idx}
+                        className='flex justify-between items-center'
+                      >
+                        <span className='text-sm text-red-700'>
+                          {discount.name}
+                        </span>
+                        <span className='text-sm font-semibold text-red-700'>
+                          -₩{formatCurrency(discount.amount)}
+                        </span>
+                      </div>
+                    ))}
+                    <div className='border-t border-red-300 pt-2 mt-2 flex justify-between items-center'>
+                      <span className='text-sm font-semibold text-red-800'>
+                        총 할인
+                      </span>
+                      <span className='text-sm font-bold text-red-800'>
+                        -₩{formatCurrency(currentReceipt.totalDiscount || 0)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            <div>
+              <p className='text-sm text-gray-500'>최종 결제 금액</p>
+              <p className='font-semibold text-2xl text-blue-600'>
+                ₩
+                {formatCurrency(
+                  currentReceipt.finalAmount || currentReceipt.totalAmount
+                )}
+              </p>
             </div>
             <div>
               <p className='text-sm text-gray-500'>과세 매출</p>
